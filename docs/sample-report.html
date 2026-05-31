@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rapport NTDS / HIBP - Ayi NEDJIMI Consultants</title>
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family:'Segoe UI',system-ui,sans-serif;
+         background:#0b1220; color:#e2e8f0; }
+  header { background:linear-gradient(135deg,#1e293b,#0f172a);
+           padding:28px 40px; border-bottom:1px solid #1e293b; }
+  header h1 { margin:0; font-size:26px; letter-spacing:1px; }
+  header .sub { color:#94a3b8; margin-top:6px; }
+  header a { color:#60a5fa; text-decoration:none; }
+  main { max-width:1080px; margin:0 auto; padding:28px 40px 60px; }
+  .cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+           gap:14px; margin:18px 0 28px; }
+  .card { background:#111827; border:1px solid #1f2937; border-radius:12px;
+          padding:18px; text-align:center; }
+  .card .val { font-size:30px; font-weight:700; }
+  .card .cap { color:#94a3b8; font-size:12px; margin-top:4px; }
+  .panel { background:#111827; border:1px solid #1f2937; border-radius:12px;
+           padding:22px; margin:18px 0; }
+  h2 { font-size:16px; margin:0 0 14px; color:#e2e8f0; }
+  .pie-wrap { display:flex; gap:28px; align-items:center; flex-wrap:wrap; }
+  ul.legend { list-style:none; margin:0; padding:0; flex:1; min-width:260px; }
+  ul.legend li { display:flex; align-items:center; gap:10px; padding:5px 0;
+                 border-bottom:1px solid #1f2937; }
+  .dot { width:13px; height:13px; border-radius:3px; flex:none; }
+  .legend .lbl { flex:1; font-size:13px; color:#cbd5e1; }
+  .legend .cnt { font-weight:700; color:#e2e8f0; }
+  table { width:100%; border-collapse:collapse; font-size:13px; }
+  th,td { text-align:left; padding:8px 10px; border-bottom:1px solid #1f2937; }
+  th { color:#94a3b8; font-weight:600; }
+  td.num { text-align:right; font-variant-numeric:tabular-nums; }
+  td.ok { color:#22c55e; }
+  .tag { display:inline-block; padding:2px 8px; border-radius:6px;
+         font-size:11px; font-weight:700; margin-right:5px; }
+  .tag.pwned { background:#7f1d1d; color:#fecaca; }
+  .tag.blank { background:#78350f; color:#fed7aa; }
+  .tag.lm    { background:#78350f; color:#fde68a; }
+  .tag.reuse { background:#1e3a8a; color:#bfdbfe; }
+  .note { color:#94a3b8; font-size:12px; }
+  footer { color:#64748b; font-size:12px; text-align:center; padding:24px; }
+  .warn { background:#422006; border:1px solid #a16207; color:#fde68a;
+          border-radius:10px; padding:14px 18px; margin:18px 0; font-size:13px; }
+</style></head>
+<body>
+<header>
+  <h1>NTDS &nbsp;HIBP&nbsp; CHECKER</h1>
+  <div class="sub">Rapport d'analyse - mode online -
+    genere le 31/05/2026 a 22:32</div>
+  <div class="sub"><a href="https://ayinedjimi-consultants.fr">Ayi NEDJIMI Consultants - https://ayinedjimi-consultants.fr</a></div>
+</header>
+<main>
+  <div class="cards"><div class="card"><div class="val" style="color:#cbd5e1">14</div><div class="cap">Comptes</div></div><div class="card"><div class="val" style="color:#ef4444">7</div><div class="cap">Compromis HIBP</div></div><div class="card"><div class="val" style="color:#f59e0b">1</div><div class="cap">Sans mot de passe</div></div><div class="card"><div class="val" style="color:#f59e0b">1</div><div class="cap">Hash LM</div></div><div class="card"><div class="val" style="color:#f59e0b">1</div><div class="cap">Mots de passe reutilises</div></div><div class="card"><div class="val" style="color:#64748b">2</div><div class="cap">Comptes machine</div></div></div>
+  <p class='note'>Les comptes machine (...$) ont ete exclus de la comparaison HIBP.</p>
+
+  <div class="panel">
+    <h2>Reutilisation des mots de passe</h2>
+    <div class="pie-wrap">
+      <div><svg viewBox="0 0 260 260" width="260" height="260"><path d="M130.0,130.0 L130.0,6.0 A124.0,124.0 0 0 1 245.9,174.0 Z" fill="#ef4444"/><path d="M130.0,130.0 L245.9,174.0 A124.0,124.0 0 1 1 130.0,6.0 Z" fill="#334155"/><circle cx="130.0" cy="130.0" r="71.9" fill="#0b1220"/></svg></div>
+      <ul class="legend"><li><span class="dot" style="background:#ef4444"></span><span class="lbl">4 comptes - ex. CORP\j.martin</span><span class="cnt">4</span></li><li><span class="dot" style="background:#334155"></span><span class="lbl">Mots de passe uniques</span><span class="cnt">9</span></li></ul>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>Comptes a risque (9)</h2>
+    <table><thead><tr><th>Compte</th><th class="num">HIBP</th>
+      <th class="num">Reutil.</th><th>Etat</th></tr></thead>
+      <tbody><tr><td>CORP\administrateur</td><td class='num'>52,256,179</td><td class='num'>-</td><td><span class="tag pwned">COMPROMIS</span></td></tr><tr><td>CORP\j.martin</td><td class='num'>140,210</td><td class='num'>4</td><td><span class="tag pwned">COMPROMIS</span><span class="tag reuse">x4</span></td></tr><tr><td>CORP\a.dubois</td><td class='num'>140,210</td><td class='num'>4</td><td><span class="tag pwned">COMPROMIS</span><span class="tag reuse">x4</span></td></tr><tr><td>CORP\s.bernard</td><td class='num'>140,210</td><td class='num'>4</td><td><span class="tag pwned">COMPROMIS</span><span class="tag reuse">x4</span></td></tr><tr><td>CORP\backup.svc</td><td class='num'>140,210</td><td class='num'>4</td><td><span class="tag pwned">COMPROMIS</span><span class="tag reuse">x4</span></td></tr><tr><td>CORP\p.durand</td><td class='num'>2,999</td><td class='num'>-</td><td><span class="tag pwned">COMPROMIS</span></td></tr><tr><td>CORP\c.leroy</td><td class='num'>87</td><td class='num'>-</td><td><span class="tag pwned">COMPROMIS</span></td></tr><tr><td>CORP\legacy.app</td><td class='num'>0</td><td class='num'>-</td><td><span class="tag lm">LM</span></td></tr><tr><td>CORP\old.service</td><td class='num'>0</td><td class='num'>-</td><td><span class="tag blank">VIDE</span></td></tr></tbody></table>
+  </div>
+
+  <div class="panel">
+    <h2>Groupes de comptes a mot de passe identique</h2>
+    <table><thead><tr><th class="num">Comptes</th><th>Membres</th></tr></thead>
+      <tbody><tr><td class='num'>4</td><td>CORP\j.martin, CORP\a.dubois, CORP\s.bernard, CORP\backup.svc</td></tr></tbody></table>
+  </div>
+
+  <div class="warn">Rappel de securite : supprimez ntds.dit et SYSTEM avec
+    sdelete apres l'analyse, et reinitialisez les mots de passe compromis
+    (ainsi que le compte krbtgt deux fois) si la base a pu etre exposee.</div>
+</main>
+<footer>NTDS HIBP Checker v1.0.0 - Ayi NEDJIMI Consultants - https://ayinedjimi-consultants.fr</footer>
+</body></html>

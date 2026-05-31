@@ -1,0 +1,5 @@
+impacket>=0.12
+customtkinter>=5.2
+requests>=2.31
+windnd>=1.0
+pyinstaller>=6.0
