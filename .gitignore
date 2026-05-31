@@ -1,0 +1,34 @@
+# Environnement Python
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Artefacts de build PyInstaller
+build/
+dist/
+*.spec
+
+# Image de splash generee automatiquement par build.ps1
+assets/splash.png
+
+# Exe portable : a publier en GitHub Release, pas dans le depot
+*.exe
+
+# Cache / config locale generes a l'execution
+*.sqlite
+.ntds_hibp_checker*.json
+
+# Donnees sensibles : ne JAMAIS committer
+ntds.dit
+SYSTEM
+*.dit
+pwnedpasswords*.txt
+*.part
+
+# Installateurs tiers / artefacts de diagnostic
+*.msi
+diag.png
+*.log
+.DS_Store
+Thumbs.db
