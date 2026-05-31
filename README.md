@@ -41,6 +41,8 @@
 
 ### 🖼️ Captures d'écran
 
+> ℹ️ Captures réalisées avec des **données de démonstration** (comptes fictifs). L'application n'analyse que de vrais fichiers `ntds.dit` et n'embarque aucune donnée d'exemple.
+
 | Tableau de bord | Aide — récupérer ntds.dit |
 |---|---|
 | ![Résultats](docs/screenshots/01-resultats.png) | ![Aide](docs/screenshots/04-aide.png) |
@@ -111,6 +113,8 @@ Le bouton **❔ Aide** de l'application détaille aussi VSS, diskshadow et les s
 - 🎨 Modern GUI (light/dark theme, shortcuts, splash, micro-animations).
 
 ### 🖼️ Screenshots
+
+> ℹ️ Screenshots use **sample/demo data** (fictitious accounts). The app only analyzes real `ntds.dit` files and ships no built-in sample data.
 
 | Dashboard | Help — obtaining ntds.dit |
 |---|---|
