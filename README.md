@@ -67,10 +67,45 @@ cd ntds-hibp-checker
 
 ### 📋 Utilisation
 
+#### Interface graphique (par défaut)
+
 1. Placez `NTDS-HIBP-Checker.exe` dans le dossier contenant `ntds.dit` et la ruche `SYSTEM` (détectés automatiquement).
 2. Choisissez la source HIBP (API en ligne ou fichier local).
 3. **Lancer l'analyse** → consultez le tableau de bord, exportez le rapport.
 4. Onglet **Avertissements** → **supprimez** `ntds.dit` et `SYSTEM` avec SDelete.
+
+#### Ligne de commande (CLI)
+
+L'outil fonctionne aussi **sans interface graphique**, idéal pour l'automatisation ou les serveurs sans affichage :
+
+```powershell
+# Analyse avec auto-detection des fichiers dans le dossier courant
+NTDS-HIBP-Checker.exe --ntds ntds.dit --system SYSTEM
+
+# Export HTML + mode silencieux
+NTDS-HIBP-Checker.exe --ntds ntds.dit --system SYSTEM -o rapport.html -q
+
+# Mode local (hors-ligne)
+NTDS-HIBP-Checker.exe --ntds ntds.dit --system SYSTEM --mode local --hibp-file pwnedpasswords_ntlm.txt
+
+# En mode developpement
+python app.py --ntds ntds.dit --system SYSTEM -o rapport.json -f json
+```
+
+| Option | Description |
+|---|---|
+| `--ntds FILE` | Chemin vers ntds.dit (auto-détecté si absent) |
+| `--system FILE` | Chemin vers la ruche SYSTEM (auto-détecté si absent) |
+| `--mode online\|local` | Source HIBP : API en ligne (défaut) ou fichier local |
+| `--hibp-file FILE` | Fichier HIBP NTLM local (requis si `--mode local`) |
+| `--output FILE` / `-o` | Chemin du fichier de rapport à générer |
+| `--format FMT` / `-f` | Format : `json`, `csv`, `html`, `txt` (déduit de l'extension) |
+| `--include-machine` | Inclure les comptes machine ($) dans la vérification HIBP |
+| `--no-cache` | Désactiver le cache persistant SQLite |
+| `--quiet` / `-q` | Mode silencieux (résumé final uniquement) |
+
+Le CLI affiche les **groupes de mots de passe identiques** avec le détail de chaque compte et le nombre d'occurrences HIBP.
+Code de sortie : `0` = aucun risque, `2` = comptes compromis ou sans mot de passe détectés.
 
 ### 🔑 Récupérer `ntds.dit` et `SYSTEM`
 
@@ -140,10 +175,45 @@ cd ntds-hibp-checker
 
 ### 📋 Usage
 
+#### GUI (default)
+
 1. Drop `NTDS-HIBP-Checker.exe` into the folder containing `ntds.dit` and the `SYSTEM` hive (auto-detected).
 2. Pick the HIBP source (online API or local file).
 3. **Run the analysis** → review the dashboard, export the report.
 4. **Warnings** tab → **wipe** `ntds.dit` and `SYSTEM` with SDelete.
+
+#### Command-line (CLI)
+
+The tool also works **without a GUI**, ideal for automation or headless servers:
+
+```powershell
+# Analysis with auto-detection of files in the current folder
+NTDS-HIBP-Checker.exe --ntds ntds.dit --system SYSTEM
+
+# HTML export + quiet mode
+NTDS-HIBP-Checker.exe --ntds ntds.dit --system SYSTEM -o report.html -q
+
+# Local/offline mode
+NTDS-HIBP-Checker.exe --ntds ntds.dit --system SYSTEM --mode local --hibp-file pwnedpasswords_ntlm.txt
+
+# Dev mode
+python app.py --ntds ntds.dit --system SYSTEM -o report.json -f json
+```
+
+| Option | Description |
+|---|---|
+| `--ntds FILE` | Path to ntds.dit (auto-detected if omitted) |
+| `--system FILE` | Path to the SYSTEM hive (auto-detected if omitted) |
+| `--mode online\|local` | HIBP source: online API (default) or local file |
+| `--hibp-file FILE` | Local HIBP NTLM file (required if `--mode local`) |
+| `--output FILE` / `-o` | Output report file path |
+| `--format FMT` / `-f` | Format: `json`, `csv`, `html`, `txt` (inferred from extension) |
+| `--include-machine` | Include machine accounts ($) in HIBP checking |
+| `--no-cache` | Disable persistent SQLite cache |
+| `--quiet` / `-q` | Quiet mode (final summary only) |
+
+The CLI displays **identical password groups** with per-account detail and HIBP breach count.
+Exit code: `0` = no risk found, `2` = compromised or blank-password accounts detected.
 
 ### 🔑 Obtaining `ntds.dit` and `SYSTEM`
 

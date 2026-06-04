@@ -36,7 +36,7 @@ if (Test-Path $splash) { $splashArg = @("--splash", $splash) }
 & $py -m PyInstaller `
     --noconfirm `
     --onefile `
-    --windowed `
+    --console `
     --name "NTDS-HIBP-Checker" `
     --collect-all customtkinter `
     --collect-all impacket `
