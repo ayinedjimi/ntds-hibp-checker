@@ -88,6 +88,9 @@ NTDS-HIBP-Checker.exe --ntds ntds.dit --system SYSTEM -o rapport.html -q
 # Mode local (hors-ligne)
 NTDS-HIBP-Checker.exe --ntds ntds.dit --system SYSTEM --mode local --hibp-file pwnedpasswords_ntlm.txt
 
+# Telecharger la base HIBP complete pour le mode local
+NTDS-HIBP-Checker.exe --download-hibp pwnedpasswords_ntlm.txt
+
 # En mode developpement
 python app.py --ntds ntds.dit --system SYSTEM -o rapport.json -f json
 ```
@@ -98,6 +101,7 @@ python app.py --ntds ntds.dit --system SYSTEM -o rapport.json -f json
 | `--system FILE` | Chemin vers la ruche SYSTEM (auto-détecté si absent) |
 | `--mode online\|local` | Source HIBP : API en ligne (défaut) ou fichier local |
 | `--hibp-file FILE` | Fichier HIBP NTLM local (requis si `--mode local`) |
+| `--download-hibp FILE` | Télécharger la base HIBP NTLM complète dans FILE (barre de progression, ETA, vitesse) |
 | `--output FILE` / `-o` | Chemin du fichier de rapport à générer |
 | `--format FMT` / `-f` | Format : `json`, `csv`, `html`, `txt` (déduit de l'extension) |
 | `--include-machine` | Inclure les comptes machine ($) dans la vérification HIBP |
@@ -196,6 +200,9 @@ NTDS-HIBP-Checker.exe --ntds ntds.dit --system SYSTEM -o report.html -q
 # Local/offline mode
 NTDS-HIBP-Checker.exe --ntds ntds.dit --system SYSTEM --mode local --hibp-file pwnedpasswords_ntlm.txt
 
+# Download the full HIBP database for local/offline mode
+NTDS-HIBP-Checker.exe --download-hibp pwnedpasswords_ntlm.txt
+
 # Dev mode
 python app.py --ntds ntds.dit --system SYSTEM -o report.json -f json
 ```
@@ -206,6 +213,7 @@ python app.py --ntds ntds.dit --system SYSTEM -o report.json -f json
 | `--system FILE` | Path to the SYSTEM hive (auto-detected if omitted) |
 | `--mode online\|local` | HIBP source: online API (default) or local file |
 | `--hibp-file FILE` | Local HIBP NTLM file (required if `--mode local`) |
+| `--download-hibp FILE` | Download the full HIBP NTLM database to FILE (progress bar, ETA, speed) |
 | `--output FILE` / `-o` | Output report file path |
 | `--format FMT` / `-f` | Format: `json`, `csv`, `html`, `txt` (inferred from extension) |
 | `--include-machine` | Include machine accounts ($) in HIBP checking |

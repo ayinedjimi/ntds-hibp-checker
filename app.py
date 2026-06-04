@@ -16,10 +16,12 @@ def _has_cli_args() -> bool:
         return False
     cli_flags = {"--ntds", "--system", "--mode", "--hibp-file", "--output",
                  "-o", "--format", "-f", "--quiet", "-q", "--version", "-V",
-                 "--help", "-h", "--include-machine", "--no-cache"}
+                 "--help", "-h", "--include-machine", "--no-cache",
+                 "--download-hibp"}
     return any(arg in cli_flags or arg.startswith("--ntds=")
                or arg.startswith("--system=") or arg.startswith("--output=")
                or arg.startswith("--hibp-file=") or arg.startswith("--format=")
+               or arg.startswith("--download-hibp=")
                for arg in sys.argv[1:])
 
 

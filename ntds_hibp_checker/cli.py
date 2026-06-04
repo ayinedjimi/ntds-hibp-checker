@@ -19,6 +19,7 @@ from typing import Optional
 
 from . import __app_name__, __version__, __author__, __url__
 from .analyzer import Analyzer, AnalysisReport, Phase, Progress, AccountStatus
+from .downloader import download_hibp_ntlm, TOTAL_PREFIXES
 from .report import to_json, to_csv, to_html, reuse_distribution
 from .security import SECURITY_WARNINGS, sdelete_command
 
@@ -84,8 +85,13 @@ def build_parser() -> argparse.ArgumentParser:
                f"  python app.py --ntds ntds.dit --system SYSTEM\n"
                f"  python app.py --ntds ntds.dit --system SYSTEM --format html --output rapport.html\n"
                f"  python app.py --ntds ntds.dit --system SYSTEM --mode local --hibp-file pwnedpasswords_ntlm.txt\n"
+               f"  python app.py --download-hibp pwnedpasswords_ntlm.txt\n"
                f"\n{__author__} - {__url__}",
     )
+    p.add_argument("--download-hibp", metavar="FILE",
+                   help="Telecharger la base HIBP NTLM complete dans FILE "
+                        "(plusieurs dizaines de Go, 1h+). "
+                        "Ignore les options d'analyse.")
     p.add_argument("--ntds", metavar="FILE",
                    help="Chemin vers le fichier ntds.dit "
                         "(auto-detecte dans le dossier courant)")
@@ -310,9 +316,103 @@ def _report_text_plain(report: AnalysisReport) -> str:
     return "\n".join(lines)
 
 
+def _fmt_duration(seconds: float) -> str:
+    seconds = int(max(0, seconds))
+    h, rem = divmod(seconds, 3600)
+    m, s = divmod(rem, 60)
+    if h:
+        return f"{h}h{m:02d}min"
+    if m:
+        return f"{m}min{s:02d}s"
+    return f"{s}s"
+
+
+def _fmt_size(nbytes: float) -> str:
+    if nbytes >= 1 << 30:
+        return f"{nbytes / (1 << 30):.1f} Go"
+    if nbytes >= 1 << 20:
+        return f"{nbytes / (1 << 20):.1f} Mo"
+    return f"{nbytes / (1 << 10):.0f} Ko"
+
+
+def _run_download(args):
+    out_path = args.download_hibp
+    print()
+    print(bold(f"  {__app_name__} v{__version__} - Telechargement base HIBP"))
+    print(dim(f"  {__author__} - {__url__}"))
+    print()
+    print(f"  Destination : {out_path}")
+    print(f"  Plages API  : {TOTAL_PREFIXES:,} prefixes a telecharger")
+    print()
+    print(yellow("  [!] Le fichier final pese plusieurs dizaines de Go."))
+    print(yellow("      Le telechargement peut durer 1 a plusieurs heures."))
+    print(yellow("      Ctrl+C pour annuler (le fichier .part est conserve)."))
+    print()
+
+    t0 = time.time()
+    last_print = [0.0]
+
+    def on_progress(done: int, total: int):
+        now = time.time()
+        if now - last_print[0] < 0.5 and done < total:
+            return
+        last_print[0] = now
+
+        elapsed = now - t0
+        pct = 100 * done / total if total else 0
+        filled = int(40 * done / total) if total else 0
+        bar = f"[{'#' * filled}{'.' * (40 - filled)}]"
+
+        eta_txt = ""
+        speed_txt = ""
+        size_txt = ""
+        if done > 0 and elapsed > 2:
+            rate = done / elapsed
+            remaining = (total - done) / rate if rate > 0 else 0
+            eta_txt = f"  ETA {_fmt_duration(remaining)}"
+            speed_txt = f"  {rate:.0f} plages/s"
+            # estimation taille : ~540 octets par plage en moyenne
+            est_size = done * 540
+            size_txt = f"  ~{_fmt_size(est_size)}"
+
+        print(f"\r  {bar} {pct:5.1f}%  {done:>10,}/{total:,}"
+              f"{speed_txt}{size_txt}{eta_txt}    ",
+              end="", flush=True)
+
+    try:
+        download_hibp_ntlm(out_path, on_progress=on_progress)
+    except KeyboardInterrupt:
+        elapsed = time.time() - t0
+        print(f"\n\n  {yellow('Telechargement interrompu.')} "
+              f"({_fmt_duration(elapsed)})")
+        print(f"  Le fichier partiel est conserve : {out_path}.part")
+        sys.exit(130)
+    except Exception as exc:
+        print(f"\n\n  {red(f'Erreur : {exc}')}")
+        sys.exit(1)
+
+    elapsed = time.time() - t0
+    try:
+        size = os.path.getsize(out_path)
+    except OSError:
+        size = 0
+    print(f"\n\n  {green('Telechargement termine.')}")
+    print(f"  Fichier : {out_path} ({_fmt_size(size)})")
+    print(f"  Duree   : {_fmt_duration(elapsed)}")
+    print()
+    print(f"  Utilisez ensuite :")
+    print(dim(f"    --mode local --hibp-file \"{out_path}\""))
+    sys.exit(0)
+
+
 def main(argv=None):
     parser = build_parser()
     args = parser.parse_args(argv)
+
+    # mode telechargement : prioritaire, ignore les options d'analyse
+    if args.download_hibp:
+        _run_download(args)
+        return
 
     # auto-detection
     ntds = args.ntds or _autodetect(["ntds.dit"])
